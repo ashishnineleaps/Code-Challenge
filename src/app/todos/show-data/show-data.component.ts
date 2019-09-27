@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-show-data',
@@ -31,7 +32,7 @@ export class ShowDataComponent implements OnInit {
 
   }
   displayedColumns = ['userId', 'name', 'email', 'title', 'completed'];
-
+  dataSource;
   ngOnInit() {
     this.allUsers = this.apollo.watchQuery<Query>({
       query: gql`
@@ -68,8 +69,8 @@ export class ShowDataComponent implements OnInit {
         }
 
         this.combinedDataArray = combinedArray;
-        console.log(this.combinedDataArray);
-        this.combinedDataArray.paginator = this.paginator;
+        this.dataSource = new MatTableDataSource(this.combinedDataArray)
+        this.dataSource.paginator = this.paginator;
         this.resultsLength = this.combinedDataArray.length
       });
     });
